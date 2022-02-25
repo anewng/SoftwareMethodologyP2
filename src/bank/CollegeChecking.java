@@ -1,4 +1,4 @@
 package bank;
 
-public class CollegeChecking {
+public class CollegeChecking extends Account{
 }

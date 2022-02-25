@@ -7,7 +7,15 @@ public abstract class Account {
 
     @Override
     public boolean equals(Object obj) {
-        
+        if (obj instanceof Account) {
+            Account account = (Account) obj;
+            if (this.holder.equals(holder) == 0
+                    && this.slot.compareTo(appointment.slot) == 0
+                    && this.location.compareTo(appointment.location) == 0) { //returns 0 if they're the same right? lmao
+                return true;
+            }
+        }
+        return false;
     }
     @Override
     public String toString() {
