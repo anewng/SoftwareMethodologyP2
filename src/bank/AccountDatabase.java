@@ -12,4 +12,3 @@ public class AccountDatabase {
     public void printByAccountType() { }
     public void printFeeAndInterest() { }
 }
-• BankTel

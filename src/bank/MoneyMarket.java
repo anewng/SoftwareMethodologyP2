@@ -1,4 +1,4 @@
 package bank;
 
-public class MoneyMarket extends Account{
+public class MoneyMarket extends Savings{
 }
