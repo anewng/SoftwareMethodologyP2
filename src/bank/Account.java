@@ -11,7 +11,7 @@ public abstract class Account {
             Account account = (Account) obj;
             if (this.holder.equals(holder) == 0
                     && (this.closed == account.closed)
-                    && (this.balance == account.balance){
+                    && (this.balance == account.balance)){
                 return true;
             }
         }
