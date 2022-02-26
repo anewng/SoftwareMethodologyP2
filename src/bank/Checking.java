@@ -1,7 +1,7 @@
 package bank;
 
 public class Checking extends Account{
-    private static final double CHECKING_INTEREST = .001;
+    private static final double CHECKING_INTEREST = .001 / 12;
     private static final double CHECKING_FEE = 25;
     private static final String CHECKING_TYPE = "Checking";
 
@@ -10,10 +10,13 @@ public class Checking extends Account{
     }
 
     public double monthlyInterest(){
-        return CHECKING_INTEREST;
+        return CHECKING_INTEREST * balance;
     }//return the monthly interest
 
     public double fee(){
+        if (balance >= 1000) {
+            return WAIVED_FEE;
+        }
         return CHECKING_FEE;
     } //return the monthly fee
 
@@ -21,8 +24,4 @@ public class Checking extends Account{
         return CHECKING_TYPE;
     } //return the account type (class name)
 
-    @Override
-    public String toString(){
-        return CHECKING_TYPE + "::" + holder.toString() + "::Balance " + balance;
-    }
 }

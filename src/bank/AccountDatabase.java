@@ -1,5 +1,7 @@
 package bank;
 
+import java.text.DecimalFormat;
+
 public class AccountDatabase {
     private Account [] accounts;
     private int numAcct;
@@ -13,7 +15,16 @@ public class AccountDatabase {
      */
     private int find(Account account) {
         for (int i = 0; i < numAcct; i++){
-            if (accounts[i].equals(numAcct)){
+            if (accounts[i].equals(account)){
+                return i;
+            }
+        }
+        return NOT_FOUND;
+    }
+
+    private int findAccountProfile(Account account) {
+        for (int i = 0; i < numAcct; i++){
+            if (accounts[i].equalsProfileAndType(account)){
                 return i;
             }
         }
@@ -68,20 +79,50 @@ public class AccountDatabase {
         return true;
     }
 
-
     public void deposit(Account account) {
-        int index = find(account);
-        accounts[index].deposit(accou);
+        int index = findAccountProfile(account);
+        accounts[index] = account;
     }
-
 
     public boolean withdraw(Account account) {
-        if()
-    } //return false if insufficient fund  public void print() { }
-    public void printByAccountType() {
-
+        if (account.balance < 0) {
+            return false;
+        }
+        int index = findAccountProfile(account);
+        accounts[index] = account;
+        return true;
     }
-    public void printFeeAndInterest() {
 
+    public void print() {
+        for (int i = 0; i < numAcct; i++) {
+            System.out.println(accounts[i].toString());
+        }
+    }
+
+    public void printByAccountType() {
+        for (int i = 1; i < numAcct; ++i) {
+            Account key = accounts[i];
+            int j = i - 1;
+            while (j >= 0 && key.alphabetizeAccountType(accounts[j]) == -1 ) {
+                accounts[j + 1] = accounts[j];
+                j = j - 1;
+            }
+            accounts[j + 1] = key;
+        }
+        print();
+    }
+
+    public void printFeeAndInterest() {
+        for (int i = 0; i < numAcct; i++) {
+            DecimalFormat d = new DecimalFormat("'$'0.00");
+            System.out.println(accounts[i].toString() + "::fee " + d.format(accounts[i].fee()) + "::monthly interest " + d.format(accounts[i].monthlyInterest()));
+        }
+    }
+    public void updateBalance() {
+        for (int i = 0; i < numAcct; i++) {
+            accounts[i].balance += accounts[i].monthlyInterest();
+            accounts[i].balance -= accounts[i].fee();
+        }
+        print();
     }
 }
