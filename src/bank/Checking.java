@@ -7,13 +7,6 @@ public class Checking extends Account{
 
     public Checking(Profile newHolder, boolean isClosed, double newBalance){
         super(newHolder, isClosed, newBalance);
-        if(balance > 1000){
-            fee = WAIVED_FEE;
-        }else{
-            fee = CHECKING_FEE;
-        }
-        interest = CHECKING_INTEREST;
-        type = CHECKING_TYPE;
     }
 
     public double monthlyInterest(){

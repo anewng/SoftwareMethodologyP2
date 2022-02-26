@@ -12,10 +12,6 @@ public class CollegeChecking extends Checking{
 
     public CollegeChecking(Profile newHolder, boolean isClosed, double newBalance, int newCollegeCode){
         super(newHolder, isClosed, newBalance);
-        collegeCode = newCollegeCode;
-        fee = C_CHECKING_FEE;
-        interest = C_CHECKING_INTEREST;
-        type = C_CHECKING_TYPE;
     }
 
     @Override

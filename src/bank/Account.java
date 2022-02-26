@@ -7,9 +7,6 @@ public abstract class Account {
     protected boolean closed;
     protected double balance;
 
-    protected double interest;
-    protected double fee;
-    protected String type;
     protected static int WAIVED_FEE = 0;
 
     public Account(Profile holder, boolean closed, double balance){    }

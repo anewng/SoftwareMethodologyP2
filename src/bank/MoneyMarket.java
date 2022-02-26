@@ -11,23 +11,6 @@ public class MoneyMarket extends Savings{
     public MoneyMarket(Profile newHolder, boolean isClosed, double newBalance, int isLoyal) {
         super(newHolder, isClosed, newBalance, isLoyal);
         loyal = 1;
-        interest = LOYAL_MM_INTEREST;
-        if(balance > 300){
-            fee = WAIVED_FEE;
-        }else{
-            fee = MM_FEE;
-        }
-        type = MM_TYPE;
-    }
-
-    @Override
-    public void withdraw(double amount) {
-        this.balance -= amount;
-        if(balance < 2500){
-            loyal = 0;
-            interest = MM_INTEREST;
-        }
-        withdrawalCount++;
     }
 
     @Override

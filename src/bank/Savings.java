@@ -11,17 +11,6 @@ public class Savings extends Account{
     public Savings(Profile newHolder, boolean isClosed, double newBalance, int isLoyal){
         super(newHolder, isClosed, newBalance);
         loyal = isLoyal;
-        if(loyal == 1){
-            interest = LOYAL_SAVINGS_INTEREST;
-        }else{
-            interest = SAVINGS_INTEREST;
-        }
-        if(balance > 300){
-            fee = WAIVED_FEE;
-        }else{
-            fee = SAVINGS_FEE;
-        }
-        type = SAVINGS_TYPE;
     }
 
     public double monthlyInterest(){
