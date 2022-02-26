@@ -1,11 +1,18 @@
 package bank;
 
-import java.nio.file.AtomicMoveNotSupportedException;
+import java.text.DecimalFormat;
 
 public abstract class Account {
     protected Profile holder;
     protected boolean closed;
     protected double balance;
+
+    protected double interest;
+    protected double fee;
+    protected String type;
+    protected static int WAIVED_FEE = 0;
+
+    public Account(Profile holder, boolean closed, double balance){    }
 
     @Override
     public boolean equals(Object obj) {
@@ -49,10 +56,10 @@ public abstract class Account {
         return returnString;
     }
     public void withdraw(double amount) {
-
+        this.balance -= amount;
     }
     public void deposit(double amount) {
-
+        this.balance += amount;
     }
     public abstract double monthlyInterest(); //return the monthly interest
     public abstract double fee(); //return the monthly fee
