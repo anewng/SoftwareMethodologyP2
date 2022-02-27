@@ -64,20 +64,20 @@ public class BankTeller {
             } else if (result[0].equals("C")) {
                 Account newAccount = new Checking(new Profile(null, null, null), false, 0);
                 String accountType = result[1], first = result[2], last = result[3], dob = result[4];
-
-                if(accountType.equals("MM")){
-
-                } else if(accountType.equals("C")){
-
+                Profile newProfile = new Profile(first, last, new Date(dob));
+                if(accountType.equals("C")){
+                    newAccount = new Checking(newProfile, false, 0);
                 } else if(accountType.equals("CC")){
-                    newAccount = new Savings(newProfile, false,
-                            balanceDouble, Integer.parseInt(result[6]));
+                    newAccount = new CollegeChecking(newProfile, false,
+                            0, 0);
                 } else if(accountType.equals("S")){
-                    newAccount = new MoneyMarket(newProfile, false, balanceDouble, 1);
-                } else {
-                    System.out.println("Invalid command!");
-                    continue;
+                    newAccount = new Savings(newProfile, false,
+                            0, 0);
+                } else if(accountType.equals("MM")){
+                    newAccount = new MoneyMarket(newProfile, false, 0, 1);
                 }
+                Account closeAcc = bankDatabase.findByProfileType(newAccount);
+                bankDatabase.close(closeAcc);
             } else if (result[0].equals("D")) {
 
             } else if (result[0].equals("W")) {

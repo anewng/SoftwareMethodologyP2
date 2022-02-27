@@ -85,6 +85,15 @@ public class AccountDatabase {
         return false;
     }
 
+    public Account findByProfileType(Account account) {
+        for (int i = 0; i < numAcct; i++){
+            if ((accounts[i].holder.equals(account.holder) == 0) && accounts[i].getType().compareTo(account.getType()) == 0){
+                return accounts[i];
+            }
+        }
+        return null;
+    }
+
     /**
      Increases length of accounts by 4 to account for new accounts.
      */
@@ -116,25 +125,21 @@ public class AccountDatabase {
     }
 
     /**
-     Removes an account from the bank.
-     @param account the account being removed.
-     @return true if the account is removed, else return false.
+     Closes an account in the database.
+     @param account the account being closed.
+     @return true if the account is closed, else return false.
      */
     public boolean close(Account account) {
         int index = find(account);
-        if(index == -1 ){
+        if (index == -1 ){
             return false;
         }
-        Account[] temp = new Account[accounts.length];
-        int j = 0;
-        for(int i = 0; i < numAcct; i++){
-            if(i != index){
-                temp[j] = accounts[i];
-                j++;
-            }
+        accounts[index].closed = true;
+        accounts[index].balance = 0; //can we change balance/closed w/o setters??
+        Account acc = accounts[index];
+        if (accounts[index] instanceof Savings) {
+            ((Savings) accounts[index]).loyal = 0; // is this right lmao??
         }
-        numAcct--;
-        accounts = temp;
         return true;
     }
 
