@@ -212,6 +212,5 @@ public class AccountDatabase {
             accounts[i].balance += accounts[i].monthlyInterest();
             accounts[i].balance -= accounts[i].fee();
         }
-        print();
     }
 }
