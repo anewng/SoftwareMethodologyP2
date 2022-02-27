@@ -1,5 +1,7 @@
 package bank;
 
+import java.util.Locale;
+
 /**
  The Profile class is used to create/manipulate/access Patient objects.
  @author Annie Wang, Jasmine Flanders
@@ -51,8 +53,10 @@ public class Profile {
      @return 0 if profile are the same, -1 if profile are not equal
      */
     public int equals(Profile person){
-        if( (this.fname.compareTo(person.fname) == 0) && (this.lname.compareTo(person.lname) == 0)
-        && (this.dob.equals(person.dob)) ){
+        String thisFName = this.fname.toLowerCase(), thisLName = this.lname.toLowerCase(),
+                fName = person.fname.toLowerCase(), lName = person.lname.toLowerCase();
+        if( (thisFName.compareTo(fName) == 0) && ((thisLName.compareTo(lName)) == 0)
+            && (this.dob.compareTo(person.dob) == 0) ){
             return 0;
         }else{
             return -1;

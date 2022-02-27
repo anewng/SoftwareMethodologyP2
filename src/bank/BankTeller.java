@@ -10,8 +10,8 @@ public class BankTeller {
      Runs the BankTeller.
      */
     public void run() {
-        Scanner s = new Scanner(System.in);
         System.out.println("Bank Teller is running.\n");
+        Scanner s = new Scanner(System.in);
         AccountDatabase bankDatabase = new AccountDatabase();
         while (s.hasNext()) {
             String inputLine = s.nextLine();
@@ -24,60 +24,78 @@ public class BankTeller {
                 System.out.println("Bank Teller is terminated.");
                 break;
             } else if (result[0].equals("O")) {
+                Account newAccount = new Checking(new Profile(null, null, null),
+                        false, 0);
+                String accountType = "", first = "", last = "", dob = "", balance = "";
+                int codes= -1;
+
                 try{
-                    Account newAccount = new Checking(new Profile(null, null, null), false, 0);
-                    String accountType = result[1], first = result[2], last = result[3], dob = result[4],
-                            balance = result[5], codes = result[6];
+                    accountType = result[1];
+                    first = result[2];
+                    last = result[3];
+                    dob = result[4];
+                    balance = result[5];
+                    if( accountType.equals("S") || accountType.equals("CC") ){
+                        codes = Integer.parseInt(result[6]);
+                    }
                 }catch(ArrayIndexOutOfBoundsException e){
                     System.out.println("Missing data for opening an account.");
                     continue;
                 }
-
-                Account newAccount = new Checking(new Profile(null, null, null), false, 0);
-                String accountType = result[1], first = result[2], last = result[3], dob = result[4],
-                        balance = result[5], codes = result[6];
 
                 double balanceDouble = 0;
                 try{
                     balanceDouble = Double.parseDouble(balance);
                 }catch (NumberFormatException e){
                     System.out.println("Not a valid amount.");
-                }
-
-                Date birth = new Date(dob);
-                Profile newProfile = new Profile(first, last, new Date(dob));
-
-                if(openReturnErrorStatements(accountType, first, last, dob, balanceDouble, codes, birth,
-                        bankDatabase, newAccount)){
                     continue;
                 }
 
+                Date birth = new Date(dob);
+                Profile newProfile = new Profile(first, last, birth);
+
                 if(accountType.equals("C")){
                     newAccount = new Checking(newProfile, false, balanceDouble);
-                } else if(accountType.equals("CC")){
+                } else if (accountType.equals("CC")) {
                     newAccount = new CollegeChecking(newProfile, false,
-                            balanceDouble, Integer.parseInt(result[6]));
-                } else if(accountType.equals("S")){
+                            balanceDouble, codes);
+                } else if (accountType.equals("S")) {
                     newAccount = new Savings(newProfile, false,
-                            balanceDouble, Integer.parseInt(result[6]));
-                } else if(accountType.equals("MM")){
+                            balanceDouble, codes);
+                } else if (accountType.equals("MM")) {
                     newAccount = new MoneyMarket(newProfile, false, balanceDouble, 1);
-                } else {
-                    System.out.println("Invalid command!");
+                }
+
+                if(openReturnErrorStatements(newAccount, bankDatabase)){
                     continue;
                 }
 
                 int index = bankDatabase.findClosedAccount(newAccount);
                 if(index == -1){
                     bankDatabase.open(newAccount);
+                    System.out.println("Account opened.");
                 }else{
                     bankDatabase.reopen(newAccount, index);
                     System.out.println("Account reopened.");
                 }
             } else if (result[0].equals("C")) {
-                Account newAccount = new Checking(new Profile(null, null, null), false, 0);
-                String accountType = result[1], first = result[2], last = result[3], dob = result[4];
-                Profile newProfile = new Profile(first, last, new Date(dob));
+                Account newAccount = new Checking(new Profile(null, null, null),
+                        false, 0);
+                String accountType = "", first = "", last = "", dob = "";
+
+                try{
+                    accountType = result[1];
+                    first = result[2];
+                    last = result[3];
+                    dob = result[4];
+                }catch(ArrayIndexOutOfBoundsException e){
+                    System.out.println("Missing data for opening an account.");
+                    continue;
+                }
+
+                Date birth = new Date(dob);
+                Profile newProfile = new Profile(first, last, birth);
+
                 if(accountType.equals("C")){
                     newAccount = new Checking(newProfile, false, 0);
                 } else if(accountType.equals("CC")){
@@ -87,11 +105,7 @@ public class BankTeller {
                     newAccount = new Savings(newProfile, false,
                             0, 0);
                 } else if(accountType.equals("MM")){
-                    newAccount = new MoneyMarket(newProfile, false, 0, 1);
-                }
-
-                if( accountType == "" ||first == "" || last == "" || dob == ""){
-                    System.out.println("Missing data for closing an account.");
+                    newAccount = new MoneyMarket(newProfile, false, 0, 0);
                 }
 
                 Account closeAcc = bankDatabase.findByProfileType(newAccount);
@@ -102,35 +116,37 @@ public class BankTeller {
                     System.out.println("Account closed.");
                 }
             } else if (result[0].equals("D")) {
-                Account newAccount = new Checking(new Profile(null, null, null), false, 0);
+                Account newAccount = new Checking(new Profile(null, null, null),
+                        false, 0);
                 String accountType = result[1], first = result[2], last = result[3], dob = result[4],
-                        depositBalance = result[5], codes = result[6];
+                        balance = result[5];
 
                 double balanceDouble = 0;
                 try{
-                    balanceDouble = Double.parseDouble(depositBalance);
+                    balanceDouble = Double.parseDouble(balance);
                 }catch (NumberFormatException e){
                     System.out.println("Not a valid amount.");
+                    continue;
                 }
+
+                Date birth = new Date(dob);
+                Profile newProfile = new Profile(first, last, birth);
 
                 if(balanceDouble <= 0){
                     System.out.println("Deposit - amount cannot be 0 or negative.");
                     continue;
                 }
 
-                Date birth = new Date(dob);
-                Profile newProfile = new Profile(first, last, new Date(dob));
-
                 if(accountType.equals("C")){
-                    newAccount = new Checking(newProfile, false, 0);
+                    newAccount = new Checking(newProfile, false, balanceDouble);
                 } else if(accountType.equals("CC")){
                     newAccount = new CollegeChecking(newProfile, false,
-                            0, 0);
+                            balanceDouble, 0);
                 } else if(accountType.equals("S")){
                     newAccount = new Savings(newProfile, false,
-                            0, 0);
+                            balanceDouble, 0);
                 } else if(accountType.equals("MM")){
-                    newAccount = new MoneyMarket(newProfile, false, 0, 1);
+                    newAccount = new MoneyMarket(newProfile, false, balanceDouble, 1);
                 }
 
                 Account depositAccount = bankDatabase.findByProfileType(newAccount);
@@ -146,33 +162,33 @@ public class BankTeller {
                 Account newAccount = new Checking(new Profile(null, null, null),
                         false, 0);
                 String accountType = result[1], first = result[2], last = result[3], dob = result[4],
-                        depositBalance = result[5], codes = result[6];
+                        balance = result[5];
 
                 double balanceDouble = 0;
                 try{
-                    balanceDouble = Double.parseDouble(depositBalance);
+                    balanceDouble = Double.parseDouble(balance);
                 }catch (NumberFormatException e){
                     System.out.println("Not a valid amount.");
+                    continue;
                 }
-
                 if(balanceDouble <= 0){
                     System.out.println("Withdraw - amount cannot be 0 or negative.");
                     continue;
                 }
 
                 Date birth = new Date(dob);
-                Profile newProfile = new Profile(first, last, new Date(dob));
+                Profile newProfile = new Profile(first, last, birth);
 
                 if(accountType.equals("C")){
-                    newAccount = new Checking(newProfile, false, 0);
+                    newAccount = new Checking(newProfile, false, balanceDouble);
                 } else if(accountType.equals("CC")){
                     newAccount = new CollegeChecking(newProfile, false,
-                            0, 0);
+                            balanceDouble, 0);
                 } else if(accountType.equals("S")){
                     newAccount = new Savings(newProfile, false,
-                            0, 0);
+                            balanceDouble, 0);
                 } else if(accountType.equals("MM")){
-                    newAccount = new MoneyMarket(newProfile, false, 0, 1);
+                    newAccount = new MoneyMarket(newProfile, false, balanceDouble, 1);
                 }
 
                 Account withdrawAccount = bankDatabase.findByProfileType(newAccount);
@@ -191,67 +207,61 @@ public class BankTeller {
                 if(bankDatabase.getNumAcct() == 0){
                     System.out.println("Account Database is empty!");
                 }else{
+                    System.out.println("\n*list of accounts in the database*");
                     bankDatabase.print();
+                    System.out.println("*end of list*\n");
                 }
             } else if (result[0].equals("PT")) {
                 if(bankDatabase.getNumAcct() == 0){
                     System.out.println("Account Database is empty!");
                 }else{
+                    System.out.println("\n*list of accounts by account type.");
                     bankDatabase.printByAccountType();
+                    System.out.println("*end of list.\n");
                 }
             } else if (result[0].equals("PI")) {
                 if(bankDatabase.getNumAcct() == 0){
                     System.out.println("Account Database is empty!");
                 }else{
+                    System.out.println("\n*list of accounts with fee and monthly interest");
                     bankDatabase.printFeeAndInterest();
+                    System.out.println("*end of list.\n");
                 }
             } else if (result[0].equals("UB")) {
                 bankDatabase.updateBalance();
                 if(bankDatabase.getNumAcct() == 0){
                     System.out.println("Account Database is empty!");
                 }else{
+                    System.out.println("\n*list of accounts with updated balance");
                     bankDatabase.print();
+                    System.out.println("*end of list.\n");
                 }
             } else {
                 System.out.println("Invalid command!");
             }
-
         }
     }
 
-    public boolean isInDatabase(AccountDatabase database, Account account){
-        for(int i = 0; i < database.getNumAcct(); i++){
-            if(database.getDatabase()[i].equals(account)){
-                return true;
-            }
+    public boolean openReturnErrorStatements(Account newAccount, AccountDatabase bankDatabase){
+        int campusCode = -1;
+        if(newAccount.getType().equals("College Checking")){
+            campusCode = ((CollegeChecking) newAccount).collegeCode;
         }
-        return false;
-    }
-
-    public boolean openReturnErrorStatements(String accountType, String first, String last, String dob, double balance,
-                                         String codes, Date birth, AccountDatabase bankDatabase, Account newAccount){
-        int campusCode = Integer.parseInt(codes);
-        if( first == "" || last == "" || dob == "") {
-            System.out.println("Missing data for opening an account.");
-        } else if( (accountType.equals("S") || accountType.equals("CC"))
-                && (codes == "") ){
-            System.out.println("Missing data for opening an account.");
-        } else if(!birth.isValid()){
+        if(!newAccount.holder.getDob().isValid()){
             System.out.println("Date of birth invalid.");
-        } else if(balance <= 0){
+        } else if(newAccount.balance <= 0){
             System.out.println("Initial deposit cannot be 0 or negative.");
-        } else if(accountType.equals("C") && (!(campusCode == 0 || campusCode == 1 || campusCode == 2))){
+        } else if(newAccount.getType().equals("College Checking")
+                && !( campusCode == 0 || campusCode == 1 || campusCode == 2) ){
             System.out.println("Invalid campus code.");
-        } else if(accountType.equals("C") && bankDatabase.findCCProfile(newAccount)){
+        } else if(newAccount.getType().equals("Checking") && bankDatabase.findCCProfile(newAccount)){
             System.out.println(newAccount.holder.toString() + " same account(type) is in the database.");
-        } else if(accountType.equals("CC") && bankDatabase.findCProfile(newAccount)){
+        } else if(newAccount.getType().equals("College Checking") && bankDatabase.findCProfile(newAccount)){
             System.out.println(newAccount.holder.toString() + " same account(type) is in the database.");
-        } else if(isInDatabase(bankDatabase, newAccount)){
+        } else if(bankDatabase.isInDatabase(newAccount)){
             System.out.println(newAccount.holder.toString() + " same account(type) is in the database.");
-        } else if(accountType.equals("MM")){
-            if( balance >= 2500 ){
-                System.out.println("Minimum of $2500 to open a MoneyMarket account.");
-            }
+        } else if(newAccount.getType().equals("Money Market") && newAccount.balance < 2500){
+            System.out.println("Minimum of $2500 to open a MoneyMarket account.");
         } else{
             return false;
         }

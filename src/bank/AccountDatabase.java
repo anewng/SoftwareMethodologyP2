@@ -94,12 +94,21 @@ public class AccountDatabase {
         return null;
     }
 
+    public boolean isInDatabase(Account account){
+        for(int i = 0; i < numAcct; i++){
+            if(accounts[i].equals(account)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      Increases length of accounts by 4 to account for new accounts.
      */
     private void grow() {
         Account[] temp = new Account[accounts.length + DATABASE_GROWTH_INCREMENT];
-        for (int i = 0; i < accounts.length; i++) {
+        for (int i = 0; i < numAcct-1; i++) {
             temp[i] = accounts[i];
         }
         accounts = temp;
@@ -115,13 +124,18 @@ public class AccountDatabase {
         if(accounts.length < numAcct){
             grow();
         }
-        accounts[numAcct - 1] = account;
+        accounts[numAcct-1] = account;
         return true;
     }
 
     public void reopen(Account account, int index){
         accounts[index].balance = account.balance;
         accounts[index].closed = false;
+        if(accounts[index].getType().compareTo("Savings") == 0){
+            ((Savings) accounts[index]).loyal = ((Savings) account).loyal;
+        } else if (accounts[index].getType().compareTo("Money Market") == 0 && accounts[index].balance >= 2500) {
+            ((MoneyMarket) accounts[index]).loyal = 1;
+        }
     }
 
     /**
@@ -135,10 +149,10 @@ public class AccountDatabase {
             return false;
         }
         accounts[index].closed = true;
-        accounts[index].balance = 0; //can we change balance/closed w/o setters??
+        accounts[index].balance = 0;
         Account acc = accounts[index];
         if (accounts[index] instanceof Savings) {
-            ((Savings) accounts[index]).loyal = 0; // is this right lmao??
+            ((Savings) accounts[index]).loyal = 0;
         }
         return true;
     }
@@ -146,6 +160,9 @@ public class AccountDatabase {
     public void deposit(Account account) {
         int index = findAccountProfile(account);
         accounts[index] = account;
+        if (accounts[index].getType().compareTo("Money Market") == 0 && accounts[index].balance >= 2500) {
+            ((MoneyMarket) accounts[index]).loyal = 1;
+        }
     }
 
     public boolean withdraw(Account account) {
@@ -154,6 +171,9 @@ public class AccountDatabase {
         }
         int index = findAccountProfile(account);
         accounts[index] = account;
+        if (accounts[index].getType().compareTo("Money Market") == 0 && accounts[index].balance < 2500) {
+            ((MoneyMarket) accounts[index]).loyal = 0;
+        }
         return true;
     }
 
@@ -179,7 +199,8 @@ public class AccountDatabase {
     public void printFeeAndInterest() {
         for (int i = 0; i < numAcct; i++) {
             DecimalFormat d = new DecimalFormat("'$'0.00");
-            System.out.println(accounts[i].toString() + "::fee " + d.format(accounts[i].fee()) + "::monthly interest " + d.format(accounts[i].monthlyInterest()));
+            System.out.println(accounts[i].toString() + "::fee " + d.format(accounts[i].fee())
+                    + "::monthly interest " + d.format(accounts[i].monthlyInterest()));
         }
     }
 

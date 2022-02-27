@@ -10,7 +10,11 @@ public abstract class Account {
     protected static final int WAIVED_FEE = 0;
     private static final int FIRST_TWO_LETTERS = 2;
 
-    public Account(Profile holder, boolean closed, double balance){    }
+    public Account(Profile newHolder, boolean isClosed, double newBalance){
+        holder = newHolder;
+        closed = isClosed;
+        balance = newBalance;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -22,7 +26,7 @@ public abstract class Account {
             || ((account instanceof Savings && this instanceof Savings)
                     && (account instanceof MoneyMarket && this instanceof MoneyMarket ||
                     !(account instanceof MoneyMarket) && !(this instanceof MoneyMarket)))){
-                if (this.holder.equals(holder) == 0
+                if (this.holder.equals(account.holder) == 0
                         && (this.closed == account.closed)
                         && (this.balance == account.balance)){
                     return true;
@@ -63,7 +67,7 @@ public abstract class Account {
                     || ((account instanceof Savings && this instanceof Savings)
                     && (account instanceof MoneyMarket && this instanceof MoneyMarket ||
                     !(account instanceof MoneyMarket) && !(this instanceof MoneyMarket)))){
-                if (this.holder.equals(holder) == 0
+                if (this.holder.equals(account.holder) == 0
                         && (this.closed == account.closed)){
                     return true;
                 }
@@ -81,7 +85,7 @@ public abstract class Account {
                     || ((account instanceof Savings && this instanceof Savings)
                     && (account instanceof MoneyMarket && this instanceof MoneyMarket ||
                     !(account instanceof MoneyMarket) && !(this instanceof MoneyMarket)))){
-                if (this.holder.equals(holder) == 0){
+                if (this.holder.equals(account.holder) == 0){
                     return true;
                 }
             }
@@ -99,9 +103,11 @@ public abstract class Account {
             return 0;
         }else {
             for (int i = 0; i < FIRST_TWO_LETTERS; i++) {
-                if (thisAccountType[i] < accountType[i]) {
+                if (thisAccountType[i] == accountType[i]) {
+                    continue;
+                } else if(thisAccountType[i] < accountType[i]){
                     return -1;
-                } else {
+                }else {
                     return 1;
                 }
             }

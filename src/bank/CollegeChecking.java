@@ -3,7 +3,7 @@ package bank;
 import java.text.DecimalFormat;
 
 public class CollegeChecking extends Checking{
-    private int collegeCode;
+    protected int collegeCode;
 
     private static final double C_CHECKING_INTEREST = .0025 / 12;
     private static final double C_CHECKING_FEE = 0;
@@ -14,6 +14,7 @@ public class CollegeChecking extends Checking{
 
     public CollegeChecking(Profile newHolder, boolean isClosed, double newBalance, int newCollegeCode){
         super(newHolder, isClosed, newBalance);
+        collegeCode = newCollegeCode;
     }
     @Override
     public double monthlyInterest(){
