@@ -27,8 +27,8 @@ public class BankTeller {
 
                 Profile newProfile = new Profile(first, last, new Date(dob));
 
-                if(returnErrorStatements(accountType, first, last, dob, balance, codes, birth,
-                        bankDatabase, newAccount) == false){
+                if(!returnErrorStatements(accountType, first, last, dob, balance, codes, birth,
+                        bankDatabase, newAccount)){
                     continue;
                 }
 
