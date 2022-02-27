@@ -196,11 +196,12 @@ public class BankTeller {
                     System.out.println(newAccount.holder.toString() + " " + newAccount.getType()
                             + " is not in the database.");
                 } else {
-                    withdrawAccount.withdraw(newAccount.balance);
-                    if(bankDatabase.withdraw(withdrawAccount)){
-                        System.out.println("Withdraw - balance updated.");
-                    }else{
+                    if(newAccount.balance > withdrawAccount.balance){
                         System.out.println("Withdraw - insufficient fund.");
+                    }else{
+                        withdrawAccount.withdraw(newAccount.balance);
+                        bankDatabase.withdraw(withdrawAccount);
+                        System.out.println("Withdraw - balance updated.");
                     }
                 }
             } else if (result[0].equals("P")) {

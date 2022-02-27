@@ -38,7 +38,7 @@ public abstract class Account {
     @Override
     public String toString() {
         String returnString = "";
-        DecimalFormat d = new DecimalFormat("'$'0.00");
+        DecimalFormat d = new DecimalFormat("'$'#,##0.00");
         if (this instanceof Checking) {
             Checking checkingAcct = (Checking) this;
             returnString += checkingAcct.getType() + "::" + holder.toString() + "::Balance " + d.format(balance);

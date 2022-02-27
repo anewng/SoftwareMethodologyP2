@@ -166,13 +166,17 @@ public class AccountDatabase {
     }
 
     public boolean withdraw(Account account) {
+        System.out.println(account.toString());
         if (account.balance < 0) {
             return false;
         }
         int index = findAccountProfile(account);
         accounts[index] = account;
-        if (accounts[index].getType().compareTo("Money Market") == 0 && accounts[index].balance < 2500) {
-            ((MoneyMarket) accounts[index]).loyal = 0;
+        if (accounts[index].getType().compareTo("Money Market") == 0 ) {
+            if(accounts[index].balance < 2500){
+                ((MoneyMarket) accounts[index]).loyal = 0;
+            }
+            ((MoneyMarket) accounts[index]).withdrawalCount ++;
         }
         return true;
     }

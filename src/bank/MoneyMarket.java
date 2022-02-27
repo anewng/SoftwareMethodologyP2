@@ -3,7 +3,7 @@ package bank;
 import java.text.DecimalFormat;
 
 public class MoneyMarket extends Savings{
-    private int withdrawalCount = 0;
+    protected int withdrawalCount = 0;
 
     private static final double MM_INTEREST = .008 / 12;
     private static final double LOYAL_MM_INTEREST = .0095 / 12;
@@ -38,7 +38,7 @@ public class MoneyMarket extends Savings{
 
     @Override
     public String toString(){
-        DecimalFormat d = new DecimalFormat("'$'0.00");
+        DecimalFormat d = new DecimalFormat("'$'#,##0.00");
         String returnString = getType() + "::" + holder.toString() + "::Balance " + d.format(balance);
         if (loyal == 1){
             returnString += "::Loyal";

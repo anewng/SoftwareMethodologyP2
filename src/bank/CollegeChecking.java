@@ -35,7 +35,7 @@ public class CollegeChecking extends Checking{
     public String toString(){
         String campus = "";
         String returnString = "";
-        DecimalFormat d = new DecimalFormat("'$'0.00");
+        DecimalFormat d = new DecimalFormat("'$'#,##0.00");
         if(collegeCode == NEW_BRUNSWICK){
             campus = "NEW_BRUNSWICK";
         }else if(collegeCode == NEWARK){

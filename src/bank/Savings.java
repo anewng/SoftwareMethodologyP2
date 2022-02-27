@@ -1,5 +1,7 @@
 package bank;
 
+import java.text.DecimalFormat;
+
 public class Savings extends Account{
     protected int loyal;
 
@@ -30,5 +32,17 @@ public class Savings extends Account{
     public String getType(){
         return SAVINGS_TYPE;
     } //return the account type (class name)
+
+    @Override
+    public String toString(){
+        DecimalFormat d = new DecimalFormat("'$'#,##0.00");
+        String returnString = getType() + "::" + holder.toString() + "::Balance " + d.format(balance);
+        if (loyal == 1){
+            returnString += "::Loyal";
+        } else if (closed) {
+            returnString += "::CLOSED";
+        }
+        return returnString;
+    }
 
 }
