@@ -9,6 +9,30 @@ public class AccountDatabase {
     private static final int DATABASE_GROWTH_INCREMENT = 4;
 
     /**
+     Constructor creates an AccountDatabase object.
+     */
+    public AccountDatabase(){
+        numAcct = 0;
+        accounts = new Account[DATABASE_GROWTH_INCREMENT];
+    }
+
+    /**
+     Gets numAcct
+     @return int is the number of accounts in the Database
+     */
+    public int getNumAcct(){
+        return numAcct;
+    }
+
+    /**
+     Gets accounts
+     @return Account[] is the accounts Database itself
+     */
+    public Account[] getDatabase(){
+        return accounts;
+    }
+
+    /**
      Finds an account in a bank.
      @param account the account being searched for.
      @return true index of account in bank if found, else returns NOT_FOUND.
