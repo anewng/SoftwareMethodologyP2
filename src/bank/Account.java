@@ -54,7 +54,7 @@ public abstract class Account {
     public void deposit(double amount) {
         this.balance += amount;
     }
-    public boolean equalsProfileAndType(Object obj) {
+    public boolean equalsProfileTypeClosed(Object obj) {
         if (obj instanceof Account) {
             Account account = (Account) obj;
             if( ((account instanceof Checking && this instanceof Checking)
@@ -65,6 +65,23 @@ public abstract class Account {
                     !(account instanceof MoneyMarket) && !(this instanceof MoneyMarket)))){
                 if (this.holder.equals(holder) == 0
                         && (this.closed == account.closed)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean equalsProfileType(Object obj) {
+        if (obj instanceof Account) {
+            Account account = (Account) obj;
+            if( ((account instanceof Checking && this instanceof Checking)
+                    && (account instanceof CollegeChecking && this instanceof CollegeChecking ||
+                    !(account instanceof CollegeChecking) && !(this instanceof CollegeChecking)))
+                    || ((account instanceof Savings && this instanceof Savings)
+                    && (account instanceof MoneyMarket && this instanceof MoneyMarket ||
+                    !(account instanceof MoneyMarket) && !(this instanceof MoneyMarket)))){
+                if (this.holder.equals(holder) == 0){
                     return true;
                 }
             }

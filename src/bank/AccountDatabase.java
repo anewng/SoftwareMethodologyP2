@@ -48,11 +48,41 @@ public class AccountDatabase {
 
     private int findAccountProfile(Account account) {
         for (int i = 0; i < numAcct; i++){
-            if (accounts[i].equalsProfileAndType(account)){
+            if (accounts[i].equalsProfileTypeClosed(account)){
                 return i;
             }
         }
         return NOT_FOUND;
+    }
+
+    public int findClosedAccount(Account account){
+        for (int i = 0; i < numAcct; i++){
+            if (accounts[i].equalsProfileType(account)){
+                return i;
+            }
+        }
+        return NOT_FOUND;
+    }
+
+
+    public boolean findCProfile(Account account){
+        for (int i = 0; i < numAcct; i++){
+            if ((accounts[i].holder.equals(account.holder) == 0)
+                    && (accounts[i].getType().compareTo("Checking") == 0)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean findCCProfile(Account account){
+        for (int i = 0; i < numAcct; i++){
+            if ((accounts[i].holder.equals(account.holder) == 0)
+                    && (accounts[i].getType().compareTo("College Checking") == 0)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -78,6 +108,11 @@ public class AccountDatabase {
         }
         accounts[numAcct - 1] = account;
         return true;
+    }
+
+    public void reopen(Account account, int index){
+        accounts[index].balance = account.balance;
+        accounts[index].closed = false;
     }
 
     /**
@@ -142,6 +177,7 @@ public class AccountDatabase {
             System.out.println(accounts[i].toString() + "::fee " + d.format(accounts[i].fee()) + "::monthly interest " + d.format(accounts[i].monthlyInterest()));
         }
     }
+
     public void updateBalance() {
         for (int i = 0; i < numAcct; i++) {
             accounts[i].balance += accounts[i].monthlyInterest();
