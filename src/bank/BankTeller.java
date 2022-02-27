@@ -15,7 +15,7 @@ public class BankTeller {
         AccountDatabase bankDatabase = new AccountDatabase();
         while (s.hasNext()) {
             String inputLine = s.nextLine();
-            String[] result = inputLine.split(" ");
+            String[] result = inputLine.split("\\s+");
             if(inputLine == ""){
                 continue;
             }
@@ -24,6 +24,15 @@ public class BankTeller {
                 System.out.println("Bank Teller is terminated.");
                 break;
             } else if (result[0].equals("O")) {
+                try{
+                    Account newAccount = new Checking(new Profile(null, null, null), false, 0);
+                    String accountType = result[1], first = result[2], last = result[3], dob = result[4],
+                            balance = result[5], codes = result[6];
+                }catch(ArrayIndexOutOfBoundsException e){
+                    System.out.println("Missing data for opening an account.");
+                    continue;
+                }
+
                 Account newAccount = new Checking(new Profile(null, null, null), false, 0);
                 String accountType = result[1], first = result[2], last = result[3], dob = result[4],
                         balance = result[5], codes = result[6];
