@@ -16,6 +16,9 @@ public class BankTeller {
         while (s.hasNext()) {
             String inputLine = s.nextLine();
             String[] result = inputLine.split(" ");
+            if(inputLine == ""){
+                continue;
+            }
 
             if (result[0].equals("Q")) {
                 System.out.println("Bank Teller is terminated.");
@@ -60,6 +63,7 @@ public class BankTeller {
                     bankDatabase.open(newAccount);
                 }else{
                     bankDatabase.reopen(newAccount, index);
+                    System.out.println("Account reopened.");
                 }
             } else if (result[0].equals("C")) {
                 Account newAccount = new Checking(new Profile(null, null, null), false, 0);
@@ -76,21 +80,129 @@ public class BankTeller {
                 } else if(accountType.equals("MM")){
                     newAccount = new MoneyMarket(newProfile, false, 0, 1);
                 }
+
+                if( accountType == "" ||first == "" || last == "" || dob == ""){
+                    System.out.println("Missing data for closing an account.");
+                }
+
                 Account closeAcc = bankDatabase.findByProfileType(newAccount);
-                bankDatabase.close(closeAcc);
+                if(closeAcc.closed){
+                    System.out.println("Account closed already.");
+                } else {
+                    bankDatabase.close(closeAcc);
+                    System.out.println("Account closed.");
+                }
             } else if (result[0].equals("D")) {
+                Account newAccount = new Checking(new Profile(null, null, null), false, 0);
+                String accountType = result[1], first = result[2], last = result[3], dob = result[4],
+                        depositBalance = result[5], codes = result[6];
 
+                double balanceDouble = 0;
+                try{
+                    balanceDouble = Double.parseDouble(depositBalance);
+                }catch (NumberFormatException e){
+                    System.out.println("Not a valid amount.");
+                }
+
+                if(balanceDouble <= 0){
+                    System.out.println("Deposit - amount cannot be 0 or negative.");
+                    continue;
+                }
+
+                Date birth = new Date(dob);
+                Profile newProfile = new Profile(first, last, new Date(dob));
+
+                if(accountType.equals("C")){
+                    newAccount = new Checking(newProfile, false, 0);
+                } else if(accountType.equals("CC")){
+                    newAccount = new CollegeChecking(newProfile, false,
+                            0, 0);
+                } else if(accountType.equals("S")){
+                    newAccount = new Savings(newProfile, false,
+                            0, 0);
+                } else if(accountType.equals("MM")){
+                    newAccount = new MoneyMarket(newProfile, false, 0, 1);
+                }
+
+                Account depositAccount = bankDatabase.findByProfileType(newAccount);
+                if(depositAccount == null){
+                    System.out.println(newAccount.holder.toString() + " " + newAccount.getType()
+                            + " is not in the database.");
+                } else {
+                    depositAccount.deposit(newAccount.balance);
+                    bankDatabase.deposit(depositAccount);
+                    System.out.println("Deposit - balance updated.");
+                }
             } else if (result[0].equals("W")) {
+                Account newAccount = new Checking(new Profile(null, null, null),
+                        false, 0);
+                String accountType = result[1], first = result[2], last = result[3], dob = result[4],
+                        depositBalance = result[5], codes = result[6];
 
+                double balanceDouble = 0;
+                try{
+                    balanceDouble = Double.parseDouble(depositBalance);
+                }catch (NumberFormatException e){
+                    System.out.println("Not a valid amount.");
+                }
+
+                if(balanceDouble <= 0){
+                    System.out.println("Withdraw - amount cannot be 0 or negative.");
+                    continue;
+                }
+
+                Date birth = new Date(dob);
+                Profile newProfile = new Profile(first, last, new Date(dob));
+
+                if(accountType.equals("C")){
+                    newAccount = new Checking(newProfile, false, 0);
+                } else if(accountType.equals("CC")){
+                    newAccount = new CollegeChecking(newProfile, false,
+                            0, 0);
+                } else if(accountType.equals("S")){
+                    newAccount = new Savings(newProfile, false,
+                            0, 0);
+                } else if(accountType.equals("MM")){
+                    newAccount = new MoneyMarket(newProfile, false, 0, 1);
+                }
+
+                Account withdrawAccount = bankDatabase.findByProfileType(newAccount);
+                if(withdrawAccount == null){
+                    System.out.println(newAccount.holder.toString() + " " + newAccount.getType()
+                            + " is not in the database.");
+                } else {
+                    withdrawAccount.withdraw(newAccount.balance);
+                    if(bankDatabase.withdraw(withdrawAccount)){
+                        System.out.println("Withdraw - balance updated.");
+                    }else{
+                        System.out.println("Withdraw - insufficient fund.");
+                    }
+                }
             } else if (result[0].equals("P")) {
-                bankDatabase.print();
+                if(bankDatabase.getNumAcct() == 0){
+                    System.out.println("Account Database is empty!");
+                }else{
+                    bankDatabase.print();
+                }
             } else if (result[0].equals("PT")) {
-                bankDatabase.printByAccountType();
+                if(bankDatabase.getNumAcct() == 0){
+                    System.out.println("Account Database is empty!");
+                }else{
+                    bankDatabase.printByAccountType();
+                }
             } else if (result[0].equals("PI")) {
-                bankDatabase.printFeeAndInterest();
+                if(bankDatabase.getNumAcct() == 0){
+                    System.out.println("Account Database is empty!");
+                }else{
+                    bankDatabase.printFeeAndInterest();
+                }
             } else if (result[0].equals("UB")) {
                 bankDatabase.updateBalance();
-                bankDatabase.print();
+                if(bankDatabase.getNumAcct() == 0){
+                    System.out.println("Account Database is empty!");
+                }else{
+                    bankDatabase.print();
+                }
             } else {
                 System.out.println("Invalid command!");
             }
@@ -136,4 +248,6 @@ public class BankTeller {
         }
         return true;
     }
+
+
 }
