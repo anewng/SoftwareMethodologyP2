@@ -121,7 +121,7 @@ public class AccountDatabase {
      */
     public boolean open(Account account) {
         numAcct++;
-        if(accounts.length < numAcct){
+        if (accounts.length < numAcct){
             grow();
         }
         accounts[numAcct-1] = account;

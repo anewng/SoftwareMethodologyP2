@@ -17,7 +17,12 @@ public class MoneyMarket extends Savings{
 
     @Override
     public double monthlyInterest(){
-        if(loyal == 1){
+        if (balance < 2500) {
+            loyal = 0;
+        } else {
+            loyal = 1;
+        }
+        if (loyal == 1){
             return LOYAL_MM_INTEREST * balance;
         }
         return MM_INTEREST * balance;
