@@ -166,7 +166,6 @@ public class AccountDatabase {
     }
 
     public boolean withdraw(Account account) {
-        System.out.println(account.toString());
         if (account.balance < 0) {
             return false;
         }

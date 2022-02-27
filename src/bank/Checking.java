@@ -1,5 +1,7 @@
 package bank;
 
+import java.text.DecimalFormat;
+
 public class Checking extends Account{
     private static final double CHECKING_INTEREST = .001 / 12;
     private static final double CHECKING_FEE = 25;
@@ -23,5 +25,15 @@ public class Checking extends Account{
     public String getType(){
         return CHECKING_TYPE;
     } //return the account type (class name)
+
+    @Override
+    public String toString(){
+        DecimalFormat d = new DecimalFormat("'$'#,##0.00");
+        String returnString = getType() + "::" + holder.toString() + "::Balance " + d.format(balance);
+        if (closed) {
+            returnString += "::CLOSED";
+        }
+        return returnString;
+    }
 
 }
