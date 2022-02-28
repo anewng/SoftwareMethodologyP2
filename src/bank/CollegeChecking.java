@@ -19,7 +19,7 @@ public class CollegeChecking extends Checking{
     @Override
     public double monthlyInterest(){
         return C_CHECKING_INTEREST * balance;
-    }//return the monthly interest
+    } //return the monthly interest
 
     @Override
     public double fee(){
@@ -49,5 +49,9 @@ public class CollegeChecking extends Checking{
         }
         returnString += "::" + campus;
         return returnString;
+    }
+
+    public int getCollegeCode() {
+        return collegeCode;
     }
 }
