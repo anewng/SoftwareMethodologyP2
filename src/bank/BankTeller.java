@@ -100,24 +100,24 @@ public class BankTeller {
             if( accountType.equals("S") || accountType.equals("CC") ){
                 codes = Integer.parseInt(result[6]);
             }
-        }catch(ArrayIndexOutOfBoundsException e){
+        } catch(ArrayIndexOutOfBoundsException e){
             System.out.println("Missing data for opening an account.");
             return;
         }
 
         double balanceDouble = 0;
-        try{
+        try {
             balanceDouble = Double.parseDouble(balance);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e){
             System.out.println("Not a valid amount.");
             return;
         }
 
         Date birth = new Date(dob);
         Profile newProfile = new Profile(first, last, birth);
-        newAccount = createNewAccount(birth, newProfile, balanceDouble, codes, accountType);
+        newAccount = createNewAccount(newProfile, balanceDouble, codes, accountType);
 
-        if(openReturnErrorStatements(newAccount, bankDatabase)){
+        if (openReturnErrorStatements(newAccount, bankDatabase)){
             return;
         }
         openAccountLastStep(bankDatabase, newAccount);
@@ -307,10 +307,14 @@ public class BankTeller {
     }
 
     /**
-     Creates an account from values given by a user.
-     @param bankDatabase the database from which accounts are being printed.
+     Creates an account from values parsed from a user open command.
+     @param newProfile the profile for the new account.
+     @param balanceDouble the balance for the new account.
+     @param codes the code to be used for loyalty/campus codes depending on account type.
+     @param accountType the type of account.
+     @return newAccount the new account.
      */
-    public Account createNewAccount(Date birth, Profile newProfile, double balanceDouble,
+    public Account createNewAccount(Profile newProfile, double balanceDouble,
                                     int codes, String accountType){
         Account newAccount = new Checking(newProfile, true, balanceDouble);
         if(accountType.equals("C")){
@@ -327,6 +331,11 @@ public class BankTeller {
         return newAccount;
     }
 
+    /**
+     Performs the last step of opening an account by opening/reopening the account and displaying relevant messages.
+     @param bankDatabase the database for which an account is being opened.
+     @param newAccount the account being opened.
+     */
     public void openAccountLastStep(AccountDatabase bankDatabase, Account newAccount){
         int index = bankDatabase.findClosedAccount(newAccount);
         if(index == -1){
@@ -338,9 +347,15 @@ public class BankTeller {
         }
     }
 
+    /**
+     Performs the last step of making a deposit to an account or determining that the
+     account does not exist in the database and displaying relevant messages.
+     @param bankDatabase the database holding the account to which a deposit is being made.
+     @param newAccount the account being deposited to.
+     */
     public void depositBalanceLastStep(Account newAccount, AccountDatabase bankDatabase){
         Account depositAccount = bankDatabase.findByProfileType(newAccount);
-        if(depositAccount == null){
+        if (depositAccount == null){
             System.out.println(newAccount.holder.toString() + " " + newAccount.getType()
                     + " is not in the database.");
         } else {
@@ -350,6 +365,12 @@ public class BankTeller {
         }
     }
 
+    /**
+     Performs the last step of making a withdrawal from an account if there is sufficient funds
+     or determining that the account does not exist in the database and displaying relevant messages.
+     @param bankDatabase the database holding the account from which a withdrawal is being made.
+     @param newAccount the account being deposited to.
+     */
     public void withdrawBalanceLastStep(AccountDatabase bankDatabase, Account newAccount){
         Account withdrawAccount = bankDatabase.findByProfileType(newAccount);
         if(withdrawAccount == null){
