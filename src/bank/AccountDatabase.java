@@ -167,6 +167,8 @@ public class AccountDatabase {
             ((Savings) accounts[index]).loyal = ((Savings) account).loyal;
         } else if (accounts[index].getType().compareTo("Money Market") == 0 && accounts[index].balance >= 2500) {
             ((MoneyMarket) accounts[index]).loyal = 1;
+        } else if (accounts[index].getType().compareTo("College Checking") == 0){
+            ((CollegeChecking) accounts[index]).collegeCode = ((CollegeChecking) account).collegeCode;
         }
     }
 
