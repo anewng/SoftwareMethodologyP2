@@ -1,8 +1,6 @@
 package bank;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.StringTokenizer;
 
 public class BankTeller {
 
@@ -100,31 +98,12 @@ public class BankTeller {
 
         Date birth = new Date(dob);
         Profile newProfile = new Profile(first, last, birth);
-
-        if(accountType.equals("C")){
-            newAccount = new Checking(newProfile, false, balanceDouble);
-        } else if (accountType.equals("CC")) {
-            newAccount = new CollegeChecking(newProfile, false,
-                    balanceDouble, codes);
-        } else if (accountType.equals("S")) {
-            newAccount = new Savings(newProfile, false,
-                    balanceDouble, codes);
-        } else if (accountType.equals("MM")) {
-            newAccount = new MoneyMarket(newProfile, false, balanceDouble, 1);
-        }
+        newAccount = createNewAccount(birth, newProfile, balanceDouble, codes, accountType);
 
         if(openReturnErrorStatements(newAccount, bankDatabase)){
             return;
         }
-
-        int index = bankDatabase.findClosedAccount(newAccount);
-        if(index == -1){
-            bankDatabase.open(newAccount);
-            System.out.println("Account opened.");
-        }else{
-            bankDatabase.reopen(newAccount, index);
-            System.out.println("Account reopened.");
-        }
+        openAccountLastStep(bankDatabase, newAccount);
     }
 
     public void closeAccount(String[] result, AccountDatabase bankDatabase){
@@ -199,16 +178,8 @@ public class BankTeller {
         } else if(accountType.equals("MM")){
             newAccount = new MoneyMarket(newProfile, false, balanceDouble, 1);
         }
+        deleteAccountLastStep(newAccount, bankDatabase);
 
-        Account depositAccount = bankDatabase.findByProfileType(newAccount);
-        if(depositAccount == null){
-            System.out.println(newAccount.holder.toString() + " " + newAccount.getType()
-                    + " is not in the database.");
-        } else {
-            depositAccount.deposit(newAccount.balance);
-            bankDatabase.deposit(depositAccount);
-            System.out.println("Deposit - balance updated.");
-        }
     }
 
     public void withdrawBalance(String[] result, AccountDatabase bankDatabase){
@@ -243,20 +214,7 @@ public class BankTeller {
         } else if(accountType.equals("MM")){
             newAccount = new MoneyMarket(newProfile, false, balanceDouble, 1);
         }
-
-        Account withdrawAccount = bankDatabase.findByProfileType(newAccount);
-        if(withdrawAccount == null){
-            System.out.println(newAccount.holder.toString() + " " + newAccount.getType()
-                    + " is not in the database.");
-        } else {
-            if(newAccount.balance > withdrawAccount.balance){
-                System.out.println("Withdraw - insufficient fund.");
-            }else{
-                withdrawAccount.withdraw(newAccount.balance);
-                bankDatabase.withdraw(withdrawAccount);
-                System.out.println("Withdraw - balance updated.");
-            }
-        }
+        withdrawBalanceLastStep(bankDatabase, newAccount);
     }
 
     public void printAccounts(AccountDatabase bankDatabase){
@@ -297,6 +255,62 @@ public class BankTeller {
             System.out.println("\n*list of accounts with updated balance");
             bankDatabase.print();
             System.out.println("*end of list.\n");
+        }
+    }
+
+    public Account createNewAccount(Date birth, Profile newProfile, double balanceDouble,
+                                    int codes, String accountType){
+        Account newAccount = new Checking(newProfile, true, balanceDouble);
+        if(accountType.equals("C")){
+            newAccount = new Checking(newProfile, false, balanceDouble);
+        } else if (accountType.equals("CC")) {
+            newAccount = new CollegeChecking(newProfile, false,
+                    balanceDouble, codes);
+        } else if (accountType.equals("S")) {
+            newAccount = new Savings(newProfile, false,
+                    balanceDouble, codes);
+        } else if (accountType.equals("MM")) {
+            newAccount = new MoneyMarket(newProfile, false, balanceDouble, 1);
+        }
+        return newAccount;
+    }
+
+    public void openAccountLastStep(AccountDatabase bankDatabase, Account newAccount){
+        int index = bankDatabase.findClosedAccount(newAccount);
+        if(index == -1){
+            bankDatabase.open(newAccount);
+            System.out.println("Account opened.");
+        }else{
+            bankDatabase.reopen(newAccount, index);
+            System.out.println("Account reopened.");
+        }
+    }
+
+    public void deleteAccountLastStep(Account newAccount, AccountDatabase bankDatabase){
+        Account depositAccount = bankDatabase.findByProfileType(newAccount);
+        if(depositAccount == null){
+            System.out.println(newAccount.holder.toString() + " " + newAccount.getType()
+                    + " is not in the database.");
+        } else {
+            depositAccount.deposit(newAccount.balance);
+            bankDatabase.deposit(depositAccount);
+            System.out.println("Deposit - balance updated.");
+        }
+    }
+
+    public void withdrawBalanceLastStep(AccountDatabase bankDatabase, Account newAccount){
+        Account withdrawAccount = bankDatabase.findByProfileType(newAccount);
+        if(withdrawAccount == null){
+            System.out.println(newAccount.holder.toString() + " " + newAccount.getType()
+                    + " is not in the database.");
+        } else {
+            if(newAccount.balance > withdrawAccount.balance){
+                System.out.println("Withdraw - insufficient fund.");
+            }else{
+                withdrawAccount.withdraw(newAccount.balance);
+                bankDatabase.withdraw(withdrawAccount);
+                System.out.println("Withdraw - balance updated.");
+            }
         }
     }
 }
