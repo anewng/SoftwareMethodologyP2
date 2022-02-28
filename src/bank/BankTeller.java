@@ -10,6 +10,14 @@ import java.util.Scanner;
  */
 public class BankTeller {
 
+    private static final int COMMAND_INDEX = 0;
+    private static final int ACCOUNT_TYPE_INDEX = 1;
+    private static final int FIRST_NAME_INDEX = 2;
+    private static final int LAST_NAME_INDEX = 3;
+    private static final int DOB_INDEX = 4;
+    private static final int BALANCE_INDEX = 5;
+    private static final int CODES_INDEX = 6;
+
     /**
      Runs the BankTeller.
      */
@@ -20,27 +28,27 @@ public class BankTeller {
         while (s.hasNext()) {
             String inputLine = s.nextLine();
             String[] result = inputLine.split("\\s+");
-            if(inputLine == ""){
+            if (inputLine == ""){
                 continue;
             }
-            if (result[0].equals("Q")) {
+            if (result[COMMAND_INDEX].equals("Q")) {
                 System.out.println("Bank Teller is terminated.");
                 break;
-            } else if (result[0].equals("O")) {
+            } else if (result[COMMAND_INDEX].equals("O")) {
                 openAccount(result, bankDatabase);
-            } else if (result[0].equals("C")) {
+            } else if (result[COMMAND_INDEX].equals("C")) {
                 closeAccount(result, bankDatabase);
-            } else if (result[0].equals("D")) {
+            } else if (result[COMMAND_INDEX].equals("D")) {
                 depositBalance(result, bankDatabase);
-            } else if (result[0].equals("W")) {
+            } else if (result[COMMAND_INDEX].equals("W")) {
                 withdrawBalance(result, bankDatabase);
-            } else if (result[0].equals("P")) {
+            } else if (result[COMMAND_INDEX].equals("P")) {
                 printAccounts(bankDatabase);
-            } else if (result[0].equals("PT")) {
+            } else if (result[COMMAND_INDEX].equals("PT")) {
                 printAccountsByType(bankDatabase);
-            } else if (result[0].equals("PI")) {
+            } else if (result[COMMAND_INDEX].equals("PI")) {
                 printAccountsByFeesInterest(bankDatabase);
-            } else if (result[0].equals("UB")) {
+            } else if (result[COMMAND_INDEX].equals("UB")) {
                 updateAndPrint(bankDatabase);
             } else {
                 System.out.println("Invalid command!");
@@ -56,25 +64,25 @@ public class BankTeller {
      */
     public boolean openReturnErrorStatements(Account newAccount, AccountDatabase bankDatabase){
         int campusCode = -1;
-        if(newAccount.getType().equals("College Checking")){
+        if (newAccount.getType().equals("College Checking")){
             campusCode = ((CollegeChecking) newAccount).collegeCode;
         }
-        if(!newAccount.holder.getDob().isValid()){
+        if (!newAccount.holder.getDob().isValid()){
             System.out.println("Date of birth invalid.");
-        } else if(newAccount.balance <= 0){
+        } else if (newAccount.balance <= 0){
             System.out.println("Initial deposit cannot be 0 or negative.");
-        } else if(newAccount.getType().equals("College Checking")
+        } else if (newAccount.getType().equals("College Checking")
                 && !( campusCode == 0 || campusCode == 1 || campusCode == 2) ){
             System.out.println("Invalid campus code.");
-        } else if(newAccount.getType().equals("Checking") && bankDatabase.findCCProfile(newAccount)){
+        } else if (newAccount.getType().equals("Checking") && bankDatabase.findCCProfile(newAccount)){
             System.out.println(newAccount.holder.toString() + " same account(type) is in the database.");
-        } else if(newAccount.getType().equals("College Checking") && bankDatabase.findCProfile(newAccount)){
+        } else if (newAccount.getType().equals("College Checking") && bankDatabase.findCProfile(newAccount)){
             System.out.println(newAccount.holder.toString() + " same account(type) is in the database.");
-        } else if(bankDatabase.isInDatabase(newAccount)){
+        } else if (bankDatabase.isInDatabase(newAccount)){
             System.out.println(newAccount.holder.toString() + " same account(type) is in the database.");
-        } else if(newAccount.getType().equals("Money Market") && newAccount.balance < 2500){
+        } else if (newAccount.getType().equals("Money Market") && newAccount.balance < 2500){
             System.out.println("Minimum of $2500 to open a MoneyMarket account.");
-        } else{
+        } else {
             return false;
         }
         return true;
@@ -91,14 +99,14 @@ public class BankTeller {
         String accountType = "", first = "", last = "", dob = "", balance = "";
         int codes= -1;
 
-        try{
-            accountType = result[1];
-            first = result[2];
-            last = result[3];
-            dob = result[4];
-            balance = result[5];
-            if( accountType.equals("S") || accountType.equals("CC") ){
-                codes = Integer.parseInt(result[6]);
+        try {
+            accountType = result[ACCOUNT_TYPE_INDEX];
+            first = result[FIRST_NAME_INDEX];
+            last = result[LAST_NAME_INDEX];
+            dob = result[DOB_INDEX];
+            balance = result[BALANCE_INDEX];
+            if ( accountType.equals("S") || accountType.equals("CC") ){
+                codes = Integer.parseInt(result[CODES_INDEX]);
             }
         } catch(ArrayIndexOutOfBoundsException e){
             System.out.println("Missing data for opening an account.");
@@ -133,12 +141,12 @@ public class BankTeller {
                 false, 0);
         String accountType = "", first = "", last = "", dob = "";
 
-        try{
-            accountType = result[1];
-            first = result[2];
-            last = result[3];
-            dob = result[4];
-        }catch(ArrayIndexOutOfBoundsException e){
+        try {
+            accountType = result[ACCOUNT_TYPE_INDEX];
+            first = result[FIRST_NAME_INDEX];
+            last = result[LAST_NAME_INDEX];
+            dob = result[DOB_INDEX];
+        } catch(ArrayIndexOutOfBoundsException e){
             System.out.println("Missing data for opening an account.");
             return;
         }
@@ -146,7 +154,7 @@ public class BankTeller {
         Date birth = new Date(dob);
         Profile newProfile = new Profile(first, last, birth);
 
-        if(accountType.equals("C")){
+        if (accountType.equals("C")){
             newAccount = new Checking(newProfile, false, 0);
         } else if(accountType.equals("CC")){
             newAccount = new CollegeChecking(newProfile, false,
@@ -159,7 +167,7 @@ public class BankTeller {
         }
 
         Account closeAcc = bankDatabase.findByProfileType(newAccount);
-        if(closeAcc.closed){
+        if (closeAcc.closed) {
             System.out.println("Account closed already.");
         } else {
             bankDatabase.close(closeAcc);
@@ -175,13 +183,14 @@ public class BankTeller {
     public void depositBalance(String[] result, AccountDatabase bankDatabase){
         Account newAccount = new Checking(new Profile(null, null, null),
                 false, 0);
-        String accountType = result[1], first = result[2], last = result[3], dob = result[4],
-                balance = result[5];
+        String accountType = result[ACCOUNT_TYPE_INDEX], first = result[FIRST_NAME_INDEX],
+                last = result[LAST_NAME_INDEX], dob = result[DOB_INDEX],
+                balance = result[BALANCE_INDEX];
 
         double balanceDouble = 0;
-        try{
+        try {
             balanceDouble = Double.parseDouble(balance);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e){
             System.out.println("Not a valid amount.");
             return;
         }
@@ -189,20 +198,20 @@ public class BankTeller {
         Date birth = new Date(dob);
         Profile newProfile = new Profile(first, last, birth);
 
-        if(balanceDouble <= 0){
+        if (balanceDouble <= 0){
             System.out.println("Deposit - amount cannot be 0 or negative.");
             return;
         }
 
-        if(accountType.equals("C")){
+        if (accountType.equals("C")){
             newAccount = new Checking(newProfile, false, balanceDouble);
-        } else if(accountType.equals("CC")){
+        } else if (accountType.equals("CC")){
             newAccount = new CollegeChecking(newProfile, false,
                     balanceDouble, 0);
-        } else if(accountType.equals("S")){
+        } else if (accountType.equals("S")){
             newAccount = new Savings(newProfile, false,
                     balanceDouble, 0);
-        } else if(accountType.equals("MM")){
+        } else if (accountType.equals("MM")){
             newAccount = new MoneyMarket(newProfile, false, balanceDouble, 1);
         }
         depositBalanceLastStep(newAccount, bankDatabase);
@@ -217,17 +226,18 @@ public class BankTeller {
     public void withdrawBalance(String[] result, AccountDatabase bankDatabase){
         Account newAccount = new Checking(new Profile(null, null, null),
                 false, 0);
-        String accountType = result[1], first = result[2], last = result[3], dob = result[4],
-                balance = result[5];
+        String accountType = result[ACCOUNT_TYPE_INDEX], first = result[FIRST_NAME_INDEX],
+                last = result[LAST_NAME_INDEX], dob = result[DOB_INDEX],
+                balance = result[BALANCE_INDEX];
 
         double balanceDouble = 0;
-        try{
+        try {
             balanceDouble = Double.parseDouble(balance);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e){
             System.out.println("Not a valid amount.");
             return;
         }
-        if(balanceDouble <= 0){
+        if (balanceDouble <= 0){
             System.out.println("Withdraw - amount cannot be 0 or negative.");
             return;
         }
@@ -235,15 +245,15 @@ public class BankTeller {
         Date birth = new Date(dob);
         Profile newProfile = new Profile(first, last, birth);
 
-        if(accountType.equals("C")){
+        if (accountType.equals("C")){
             newAccount = new Checking(newProfile, false, balanceDouble);
-        } else if(accountType.equals("CC")){
+        } else if (accountType.equals("CC")){
             newAccount = new CollegeChecking(newProfile, false,
                     balanceDouble, 0);
-        } else if(accountType.equals("S")){
+        } else if (accountType.equals("S")){
             newAccount = new Savings(newProfile, false,
                     balanceDouble, 0);
-        } else if(accountType.equals("MM")){
+        } else if (accountType.equals("MM")){
             newAccount = new MoneyMarket(newProfile, false, balanceDouble, 1);
         }
         withdrawBalanceLastStep(bankDatabase, newAccount);
@@ -253,10 +263,10 @@ public class BankTeller {
      Prints the accounts in the database in their current order.
      @param bankDatabase the database from which accounts are being printed.
      */
-    public void printAccounts(AccountDatabase bankDatabase){
-        if(bankDatabase.getNumAcct() == 0){
+    public void printAccounts (AccountDatabase bankDatabase){
+        if (bankDatabase.getNumAcct() == 0){
             System.out.println("Account Database is empty!");
-        }else{
+        } else {
             System.out.println("\n*list of accounts in the database*");
             bankDatabase.print();
             System.out.println("*end of list*\n");
@@ -268,9 +278,9 @@ public class BankTeller {
      @param bankDatabase the database from which accounts are being printed.
      */
     public void printAccountsByType(AccountDatabase bankDatabase){
-        if(bankDatabase.getNumAcct() == 0){
+        if (bankDatabase.getNumAcct() == 0){
             System.out.println("Account Database is empty!");
-        }else{
+        } else {
             System.out.println("\n*list of accounts by account type.");
             bankDatabase.printByAccountType();
             System.out.println("*end of list.\n");
@@ -281,10 +291,10 @@ public class BankTeller {
      Prints the accounts in the database in their current order with their calculated fees/interests.
      @param bankDatabase the database from which accounts are being printed.
      */
-    public void printAccountsByFeesInterest(AccountDatabase bankDatabase){
-        if(bankDatabase.getNumAcct() == 0){
+    public void printAccountsByFeesInterest(AccountDatabase bankDatabase) {
+        if (bankDatabase.getNumAcct() == 0){
             System.out.println("Account Database is empty!");
-        }else{
+        } else {
             System.out.println("\n*list of accounts with fee and monthly interest");
             bankDatabase.printFeeAndInterest();
             System.out.println("*end of list.\n");
@@ -297,9 +307,9 @@ public class BankTeller {
      */
     public void updateAndPrint(AccountDatabase bankDatabase){
         bankDatabase.updateBalance();
-        if(bankDatabase.getNumAcct() == 0){
+        if (bankDatabase.getNumAcct() == 0){
             System.out.println("Account Database is empty!");
-        }else{
+        } else {
             System.out.println("\n*list of accounts with updated balance");
             bankDatabase.print();
             System.out.println("*end of list.\n");
@@ -338,10 +348,10 @@ public class BankTeller {
      */
     public void openAccountLastStep(AccountDatabase bankDatabase, Account newAccount){
         int index = bankDatabase.findClosedAccount(newAccount);
-        if(index == -1){
+        if (index == -1){
             bankDatabase.open(newAccount);
             System.out.println("Account opened.");
-        }else{
+        } else {
             bankDatabase.reopen(newAccount, index);
             System.out.println("Account reopened.");
         }
@@ -377,9 +387,9 @@ public class BankTeller {
             System.out.println(newAccount.holder.toString() + " " + newAccount.getType()
                     + " is not in the database.");
         } else {
-            if(newAccount.balance > withdrawAccount.balance){
+            if (newAccount.balance > withdrawAccount.balance){
                 System.out.println("Withdraw - insufficient fund.");
-            }else{
+            } else {
                 withdrawAccount.withdraw(newAccount.balance);
                 bankDatabase.withdraw(withdrawAccount);
                 System.out.println("Withdraw - balance updated.");
