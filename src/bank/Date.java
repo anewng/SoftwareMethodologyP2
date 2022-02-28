@@ -16,9 +16,8 @@ public class Date implements Comparable<Date> {
     public static final int QUATERCENTENNIAL = 400;
 
     /**
-     * Constructor takes mm/dd/yyyy and creates a Date object.
-     *
-     * @param date the date in String form of Date object you're creating.
+     Constructor takes mm/dd/yyyy and creates a Date object.
+     @param date the date in String form of Date object you're creating.
      */
     public Date(String date) {
         if (date.length() == 10) {
@@ -44,19 +43,18 @@ public class Date implements Comparable<Date> {
     }
 
     /**
-     * Creates a Date object of today's date.
+     Creates a Date object of today's date.
      */
     public Date() {
         Calendar date = Calendar.getInstance();
         month = date.get(Calendar.MONTH);
         day = date.get(Calendar.DAY_OF_MONTH);
         year = date.get(Calendar.YEAR);
-    } //create an object with today’s date (see Calendar class)
+    }
 
     /**
-     * Check to see if the date is a valid Date object.
-     *
-     * @return true if the date is valid, false if not.
+     Check to see if the date is a valid Date object.
+     @return true if the date is valid, false if not.
      */
     public boolean isValid() {
         if (year < 1900 || year > 2022) return false;
@@ -78,10 +76,9 @@ public class Date implements Comparable<Date> {
     }
 
     /**
-     * Returns ints corresponding to the relationship between the two dates being compared.
-     *
-     * @param date the date being compared to.
-     * @return 1 if date being compared is larger, -1 if date being compared is smaller, and 0 if dates equal.
+     Returns ints corresponding to the relationship between the two dates being compared.
+     @param date the date being compared to.
+     @return 1 if date being compared is larger, -1 if date being compared is smaller, and 0 if dates equal.
      */
     @Override
     public int compareTo(Date date) {
@@ -96,9 +93,8 @@ public class Date implements Comparable<Date> {
     }
 
     /**
-     * Checks to see if the date is in the future or not.
-     *
-     * @return true if the date is past today's date, false if it is before today's date.
+     Checks to see if the date is in the future or not.
+     @return true if the date is past today's date, false if it is before today's date.
      */
     public boolean isFutureDate() {
         Date today = new Date();
@@ -109,9 +105,8 @@ public class Date implements Comparable<Date> {
     }
 
     /**
-     * Checks to see if the date is a leap year date or not.
-     *
-     * @return true if the year of the date is a leap year, false if it is not a leap year.
+     Checks to see if the date is a leap year date or not.
+     @return true if the year of the date is a leap year, false if it is not a leap year.
      */
     public boolean isLeapYear() {
         if (year % QUADRENNIAL == 0) {
@@ -127,9 +122,8 @@ public class Date implements Comparable<Date> {
     }
 
     /**
-     * Converts the date into a string.
-     *
-     * @return String of the Date object.
+     Converts the date into a string.
+     @return String of the Date object.
      */
     public String toString() {
         return +this.month + "/" + this.day + "/" + this.year;

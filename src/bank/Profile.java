@@ -1,9 +1,7 @@
 package bank;
 
-import java.util.Locale;
-
 /**
- The Profile class is used to create/manipulate/access Patient objects.
+ The Profile class is used to create/manipulate/access Profile objects.
  @author Annie Wang, Jasmine Flanders
  */
 public class Profile {
@@ -13,9 +11,9 @@ public class Profile {
 
     /**
      Constructor takes first, last, birth and creates a Profile object.
-     @param first the first name of the Patient
-     @param last the last name of the Patient
-     @param birth the birth date of the Patient
+     @param first the first name of the Profile.
+     @param last the last name of the Profile.
+     @param birth the birth date of the Profile.
      */
     public Profile(String first, String last, Date birth){
         fname = first;
@@ -24,24 +22,24 @@ public class Profile {
     }
 
     /**
-     Gets the first name
-     @return fname is the first name of the Profile
+     Gets the first name.
+     @return fname the first name of the Profile.
      */
     public String getFname(){
         return fname;
     }
 
     /**
-     Gets the last name
-     @return lname is the last name of the Profile
+     Gets the last name.
+     @return lname the last name of the Profile.
      */
     public String getLname(){
         return lname;
     }
 
     /**
-     Gets the date of birth
-     @return dob is the dob of the Profile
+     Gets the date of birth.
+     @return dob is the dob of the Profile.
      */
     public Date getDob(){
         return dob;
@@ -50,7 +48,7 @@ public class Profile {
     /**
      Returns ints corresponding to the relationship between the two Profiles being compared
      @param person the profile being compared to
-     @return 0 if profile are the same, -1 if profile are not equal
+     @return 0 if profiles are the same, -1 if profile are not equal
      */
     public int equals(Profile person){
         String thisFName = this.fname.toLowerCase(), thisLName = this.lname.toLowerCase(),
