@@ -2,6 +2,12 @@ package bank;
 
 import java.util.Scanner;
 
+/**
+ The Bankteller class processes commands from the user to manipulate the database.
+ It allows the user to open, close, and display accounts.
+ Accounts can also be sorted by type or have their balance updated by interest/fees.
+ @author Annie Wang, Jasmine Flanders
+ */
 public class BankTeller {
 
     /**
@@ -25,7 +31,7 @@ public class BankTeller {
             } else if (result[0].equals("C")) {
                 closeAccount(result, bankDatabase);
             } else if (result[0].equals("D")) {
-                deleteAccount(result, bankDatabase);
+                depositBalance(result, bankDatabase);
             } else if (result[0].equals("W")) {
                 withdrawBalance(result, bankDatabase);
             } else if (result[0].equals("P")) {
@@ -42,6 +48,12 @@ public class BankTeller {
         }
     }
 
+    /**
+     Returns relevant error statements for an invalid open command.
+     @param newAccount the account being referenced by the open command.
+     @param bankDatabase the database containing the accounts.
+     @return true if there is an error, else return false.
+     */
     public boolean openReturnErrorStatements(Account newAccount, AccountDatabase bankDatabase){
         int campusCode = -1;
         if(newAccount.getType().equals("College Checking")){
@@ -68,6 +80,11 @@ public class BankTeller {
         return true;
     }
 
+    /**
+     Opens an account by adding it to the database.
+     @param result a string array containing information from a user open command.
+     @param bankDatabase the database to which an account is being added.
+     */
     public void openAccount(String[] result, AccountDatabase bankDatabase){
         Account newAccount = new Checking(new Profile(null, null, null),
                 false, 0);
@@ -106,6 +123,11 @@ public class BankTeller {
         openAccountLastStep(bankDatabase, newAccount);
     }
 
+    /**
+     Closes an account in a database.
+     @param result a string array containing information from a user close command.
+     @param bankDatabase the database from which an account is being closed.
+     */
     public void closeAccount(String[] result, AccountDatabase bankDatabase){
         Account newAccount = new Checking(new Profile(null, null, null),
                 false, 0);
@@ -145,7 +167,12 @@ public class BankTeller {
         }
     }
 
-    public void deleteAccount(String[] result, AccountDatabase bankDatabase){
+    /**
+     Deposits money into an account in the database.
+     @param result a string array containing information from a user deposit command.
+     @param bankDatabase the database to which a deposit is being made.
+     */
+    public void depositBalance(String[] result, AccountDatabase bankDatabase){
         Account newAccount = new Checking(new Profile(null, null, null),
                 false, 0);
         String accountType = result[1], first = result[2], last = result[3], dob = result[4],
@@ -178,10 +205,15 @@ public class BankTeller {
         } else if(accountType.equals("MM")){
             newAccount = new MoneyMarket(newProfile, false, balanceDouble, 1);
         }
-        deleteAccountLastStep(newAccount, bankDatabase);
+        depositBalanceLastStep(newAccount, bankDatabase);
 
     }
 
+    /**
+     Withdraws money from an account in the database.
+     @param result a string array containing information from a user deposit command.
+     @param bankDatabase the database from which a withdrawal is being made.
+     */
     public void withdrawBalance(String[] result, AccountDatabase bankDatabase){
         Account newAccount = new Checking(new Profile(null, null, null),
                 false, 0);
@@ -217,6 +249,10 @@ public class BankTeller {
         withdrawBalanceLastStep(bankDatabase, newAccount);
     }
 
+    /**
+     Prints the accounts in the database in their current order.
+     @param bankDatabase the database from which accounts are being printed.
+     */
     public void printAccounts(AccountDatabase bankDatabase){
         if(bankDatabase.getNumAcct() == 0){
             System.out.println("Account Database is empty!");
@@ -227,6 +263,10 @@ public class BankTeller {
         }
     }
 
+    /**
+     Prints the accounts in the database by order of type.
+     @param bankDatabase the database from which accounts are being printed.
+     */
     public void printAccountsByType(AccountDatabase bankDatabase){
         if(bankDatabase.getNumAcct() == 0){
             System.out.println("Account Database is empty!");
@@ -237,6 +277,10 @@ public class BankTeller {
         }
     }
 
+    /**
+     Prints the accounts in the database in their current order with their calculated fees/interests.
+     @param bankDatabase the database from which accounts are being printed.
+     */
     public void printAccountsByFeesInterest(AccountDatabase bankDatabase){
         if(bankDatabase.getNumAcct() == 0){
             System.out.println("Account Database is empty!");
@@ -247,6 +291,10 @@ public class BankTeller {
         }
     }
 
+    /**
+     Prints the accounts in the database in their current order with updated balances based on fees/interests.
+     @param bankDatabase the database from which accounts are being updated/printed.
+     */
     public void updateAndPrint(AccountDatabase bankDatabase){
         bankDatabase.updateBalance();
         if(bankDatabase.getNumAcct() == 0){
@@ -258,6 +306,10 @@ public class BankTeller {
         }
     }
 
+    /**
+     Creates an account from values given by a user.
+     @param bankDatabase the database from which accounts are being printed.
+     */
     public Account createNewAccount(Date birth, Profile newProfile, double balanceDouble,
                                     int codes, String accountType){
         Account newAccount = new Checking(newProfile, true, balanceDouble);
@@ -286,7 +338,7 @@ public class BankTeller {
         }
     }
 
-    public void deleteAccountLastStep(Account newAccount, AccountDatabase bankDatabase){
+    public void depositBalanceLastStep(Account newAccount, AccountDatabase bankDatabase){
         Account depositAccount = bankDatabase.findByProfileType(newAccount);
         if(depositAccount == null){
             System.out.println(newAccount.holder.toString() + " " + newAccount.getType()
