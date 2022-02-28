@@ -56,7 +56,7 @@ public abstract class Account {
     public boolean equals(Object obj) {
         if (obj instanceof Account) {
             Account account = (Account) obj;
-            if( ((account instanceof Checking && this instanceof Checking)
+            if ( ((account instanceof Checking && this instanceof Checking)
                 && (account instanceof CollegeChecking && this instanceof CollegeChecking ||
                     !(account instanceof CollegeChecking) && !(this instanceof CollegeChecking)))
             || ((account instanceof Savings && this instanceof Savings)
@@ -118,7 +118,7 @@ public abstract class Account {
     public boolean equalsProfileTypeClosed(Object obj) {
         if (obj instanceof Account) {
             Account account = (Account) obj;
-            if( ((account instanceof Checking && this instanceof Checking)
+            if ( ((account instanceof Checking && this instanceof Checking)
                     && (account instanceof CollegeChecking && this instanceof CollegeChecking ||
                     !(account instanceof CollegeChecking) && !(this instanceof CollegeChecking)))
                     || ((account instanceof Savings && this instanceof Savings)
@@ -165,13 +165,13 @@ public abstract class Account {
         char accountType[] = account.getType().toCharArray();
         if (this.getType().compareTo(account.getType()) == 0){
             return 0;
-        }else {
+        } else {
             for (int i = 0; i < FIRST_TWO_LETTERS; i++) {
                 if (thisAccountType[i] == accountType[i]) {
                     continue;
                 } else if(thisAccountType[i] < accountType[i]){
                     return -1;
-                }else {
+                } else {
                     return 1;
                 }
             }

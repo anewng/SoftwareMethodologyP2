@@ -17,6 +17,7 @@ public class Savings extends Account{
     private static final double LOYAL_SAVINGS_INTEREST = .0045 / 12;
     private static final double SAVINGS_FEE = 6;
     private static final String SAVINGS_TYPE = "Savings";
+    private static final int MIN_SAVINGS_BALANCE = 300;
 
     /**
      Constructor creates a Savings Account object.
@@ -35,7 +36,7 @@ public class Savings extends Account{
      @return double the value of the interest.
      */
     public double monthlyInterest(){
-        if(loyal == 1){
+        if (loyal == 1){
             return LOYAL_SAVINGS_INTEREST * balance;
         }
         return SAVINGS_INTEREST * balance;
@@ -46,7 +47,7 @@ public class Savings extends Account{
      @return double the value of the fee.
      */
     public double fee(){
-        if (balance >= 300) {
+        if (balance >= MIN_SAVINGS_BALANCE) {
             return WAIVED_FEE;
         }
         return SAVINGS_FEE;
@@ -58,7 +59,7 @@ public class Savings extends Account{
      */
     public String getType(){
         return SAVINGS_TYPE;
-    } //return the account type (class name)
+    }
 
     /**
      Converts an account to a string, with type, profile, balance, and status.

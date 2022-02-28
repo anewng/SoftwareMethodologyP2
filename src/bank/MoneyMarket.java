@@ -17,6 +17,8 @@ public class MoneyMarket extends Savings{
     private static final double LOYAL_MM_INTEREST = .0095 / 12;
     private static final double MM_FEE = 10;
     private static final String MM_TYPE = "Money Market";
+    private static final int MIN_MM_BALANCE = 2500;
+    private static final int MAX_WITHDRAWAL = 3;
 
     /**
      Constructor creates a MoneyMarket Account object.
@@ -36,7 +38,7 @@ public class MoneyMarket extends Savings{
      */
     @Override
     public double monthlyInterest(){
-        if (balance < 2500) {
+        if (balance < MIN_MM_BALANCE) {
             loyal = 0;
         } else {
             loyal = 1;
@@ -53,7 +55,7 @@ public class MoneyMarket extends Savings{
      */
     @Override
     public double fee(){
-        if (balance >= 2500 && withdrawalCount < 3) {
+        if (balance >= MIN_MM_BALANCE && withdrawalCount < MAX_WITHDRAWAL) {
             return WAIVED_FEE;
         }
         return MM_FEE;

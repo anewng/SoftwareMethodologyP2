@@ -13,6 +13,7 @@ public class AccountDatabase {
     private int numAcct;
     private static final int NOT_FOUND = -1;
     private static final int DATABASE_GROWTH_INCREMENT = 4;
+    private static final int MIN_MM_BALANCE = 2500;
 
     /**
      Constructor creates an AccountDatabase object.
@@ -109,7 +110,8 @@ public class AccountDatabase {
      */
     public Account findByProfileType(Account account) {
         for (int i = 0; i < numAcct; i++){
-            if ((accounts[i].holder.equals(account.holder) == 0) && accounts[i].getType().compareTo(account.getType()) == 0){
+            if ((accounts[i].holder.equals(account.holder) == 0)
+                    && accounts[i].getType().compareTo(account.getType()) == 0){
                 return accounts[i];
             }
         }
@@ -165,7 +167,8 @@ public class AccountDatabase {
         accounts[index].closed = false;
         if(accounts[index].getType().compareTo("Savings") == 0){
             ((Savings) accounts[index]).loyal = ((Savings) account).loyal;
-        } else if (accounts[index].getType().compareTo("Money Market") == 0 && accounts[index].balance >= 2500) {
+        } else if (accounts[index].getType().compareTo("Money Market") == 0
+                && accounts[index].balance >= MIN_MM_BALANCE) {
             ((MoneyMarket) accounts[index]).loyal = 1;
         } else if (accounts[index].getType().compareTo("College Checking") == 0){
             ((CollegeChecking) accounts[index]).collegeCode = ((CollegeChecking) account).collegeCode;
@@ -198,7 +201,8 @@ public class AccountDatabase {
     public void deposit(Account account) {
         int index = findAccountProfile(account);
         accounts[index] = account;
-        if (accounts[index].getType().compareTo("Money Market") == 0 && accounts[index].balance >= 2500) {
+        if (accounts[index].getType().compareTo("Money Market") == 0
+                && accounts[index].balance >= MIN_MM_BALANCE) {
             ((MoneyMarket) accounts[index]).loyal = 1;
         }
     }
@@ -215,7 +219,7 @@ public class AccountDatabase {
         int index = findAccountProfile(account);
         accounts[index] = account;
         if (accounts[index].getType().compareTo("Money Market") == 0 ) {
-            if(accounts[index].balance < 2500){
+            if(accounts[index].balance < MIN_MM_BALANCE){
                 ((MoneyMarket) accounts[index]).loyal = 0;
             }
             ((MoneyMarket) accounts[index]).withdrawalCount ++;

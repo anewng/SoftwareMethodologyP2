@@ -14,6 +14,7 @@ public class Checking extends Account{
     private static final double CHECKING_INTEREST = .001 / 12;
     private static final double CHECKING_FEE = 25;
     private static final String CHECKING_TYPE = "Checking";
+    private static final int MIN_CHECKING_BALANCE = 1000;
 
     /**
      Constructor creates a Checking Account object.
@@ -29,16 +30,14 @@ public class Checking extends Account{
      Returns an account's monthly interest.
      @return double the value of the interest.
      */
-    public double monthlyInterest(){
-        return CHECKING_INTEREST * balance;
-    }
+    public double monthlyInterest() {return CHECKING_INTEREST * balance;}
 
     /**
      Returns an account's monthly fee.
      @return double the value of the fee.
      */
     public double fee(){
-        if (balance >= 1000) {
+        if (balance >= MIN_CHECKING_BALANCE) {
             return WAIVED_FEE;
         }
         return CHECKING_FEE;
